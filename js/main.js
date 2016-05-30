@@ -20,12 +20,13 @@ $(document).ready(function () {
     var then = moment().add(duration, 'minutes');
     var element = $('.countdown');
 
-    setInterval(function () {
+    var interval = setInterval(function () {
         var now = moment();
         var timeleft;
 
         if (startTime) {
             then = moment(startTime, 'HH:mm');
+
         }
 
         timeleft = moment.duration(then.diff(now));
@@ -35,7 +36,12 @@ $(document).ready(function () {
         if (hours > 0) {
             format = "HH:" + format;
         }
-        element.text(moment.utc(timeleft.asMilliseconds()).format(format));
+        var response = moment.utc(timeleft.asMilliseconds()).format(format);
+        if (then.isBefore(now)) {
+            response = '00:00';
+            clearInterval(interval);
+        }
+        element.text(response);
     }, 1000);
 
 });

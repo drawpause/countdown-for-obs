@@ -15,7 +15,7 @@ function refresh() {
 
 $(document).ready(function () {
 
-    var startTime = getParameterByName('starts_at');
+    var startTime = getParameterByName('at');
     var duration = getParameterByName('duration');
     var then = moment().add(duration, 'minutes');
     var element = $('.countdown');

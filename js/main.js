@@ -8,11 +8,6 @@ function getParameterByName(name, url) {
     return decodeURIComponent(results[2].replace(/\+/g, " "));
 }
 
-function refresh() {
-
-
-}
-
 $(document).ready(function () {
 
     var startTime = getParameterByName('at');
@@ -20,6 +15,7 @@ $(document).ready(function () {
     var color = getParameterByName('color');
     var spacing = getParameterByName('spacing');
     var font = getParameterByName('font');
+    var weight = getParameterByName('weight');
     var then = moment().add(duration, 'minutes');
     var element = $('.countdown');
     
@@ -32,7 +28,16 @@ $(document).ready(function () {
     if (font) {
         element.css('font-family', font);
     }
-    
+    if (weight) {
+        element.css('font-weight', weight);
+    }
+
+    var minElement = $('#min');
+    var secElement = $('#sec');
+
+    var width = minElement.width();
+
+    $('.number').css('width', width);
 
     var interval = setInterval(function () {
         var now = moment();
@@ -45,17 +50,14 @@ $(document).ready(function () {
 
         timeleft = moment.duration(then.diff(now));
 
-        var format = "mm:ss";
-        var hours = timeleft.hours();
-        if (hours > 0) {
-            format = "HH:" + format;
-        }
-        var response = moment.utc(timeleft.asMilliseconds()).format(format);
+        var min = moment.utc(timeleft.asMilliseconds()).format('mm');
+        var sec = moment.utc(timeleft.asMilliseconds()).format('ss');
         if (then.isBefore(now)) {
             response = '00:00';
             clearInterval(interval);
         }
-        element.text(response);
+        minElement.text(min);
+        secElement.text(sec);
     }, 1000);
 
 });

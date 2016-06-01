@@ -35,10 +35,6 @@ $(document).ready(function () {
     var minElement = $('#min');
     var secElement = $('#sec');
 
-    var width = minElement.width();
-
-    $('.number').css('width', width);
-
     var interval = setInterval(function () {
         var now = moment();
         var timeleft;
@@ -47,17 +43,18 @@ $(document).ready(function () {
             then = moment(startTime, 'HH:mm');
 
         }
-
         timeleft = moment.duration(then.diff(now));
-
         var min = moment.utc(timeleft.asMilliseconds()).format('mm');
         var sec = moment.utc(timeleft.asMilliseconds()).format('ss');
         if (then.isBefore(now)) {
-            response = '00:00';
+            minElement.text('00');
+            secElement.text('00');
             clearInterval(interval);
         }
         minElement.text(min);
         secElement.text(sec);
+        var width = $('#measure').width();
+        $('.number').css('width', width);
     }, 1000);
 
 });

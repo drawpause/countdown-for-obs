@@ -62,9 +62,12 @@ textarea {
 .countdown {
     display: block;
     color: white;
-    text-shadow: -5px -5px 10px #000, 5px -5px 10px #000, -5px 5px 10px #000, 5px 5px 10px #000;
     font-size: 14rem;
     font-weight: bold;
+}
+
+.shadow {
+    text-shadow: -5px -5px 10px #000, 5px -5px 10px #000, -5px 5px 10px #000, 5px 5px 10px #000;
 }
 
 .countdown span {
@@ -72,12 +75,16 @@ textarea {
     float:left;
 }
 
+#hour {
+    text-align: center;
+}
+
 #min {
-    text-align: right;
+    text-align: center;
 }
 
 #sec {
-    text-align: left;
+    text-align: center;
 }
 
 #measure {

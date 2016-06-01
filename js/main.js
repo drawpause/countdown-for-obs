@@ -16,6 +16,7 @@ $(document).ready(function () {
     var spacing = getParameterByName('spacing');
     var font = getParameterByName('font');
     var weight = getParameterByName('weight');
+    var shadow = getParameterByName('shadow');
     var then = moment().add(duration, 'minutes');
     var element = $('.countdown');
     
@@ -31,7 +32,11 @@ $(document).ready(function () {
     if (weight) {
         element.css('font-weight', weight);
     }
+    if (shadow === 'false') {
+        element.removeClass('shadow');
+    }
 
+    var hourElement = $('#hour');
     var minElement = $('#min');
     var secElement = $('#sec');
 
@@ -44,14 +49,17 @@ $(document).ready(function () {
 
         }
         timeleft = moment.duration(then.diff(now));
+        var hours = moment.utc(timeleft.asMilliseconds()).format('HH');
         var min = moment.utc(timeleft.asMilliseconds()).format('mm');
         var sec = moment.utc(timeleft.asMilliseconds()).format('ss');
-        if (min === '00' && sec === '00') {
+        if (hours === '00' && min === '00' && sec === '00') {
+            hourElement.text('00');
             minElement.text('00');
             secElement.text('00');
             clearInterval(interval);
             return false;
         }
+        hourElement.text(hours);
         minElement.text(min);
         secElement.text(sec);
         var width = $('#measure').width();

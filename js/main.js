@@ -15,6 +15,7 @@ $(document).ready(function () {
     var color = getParameterByName('color');
     var spacing = getParameterByName('spacing');
     var font = getParameterByName('font');
+    var size = getParameterByName('size');
     var weight = getParameterByName('weight');
     var shadow = getParameterByName('shadow');
     var then = moment().add(duration, 'minutes');
@@ -28,6 +29,9 @@ $(document).ready(function () {
     }
     if (font) {
         element.css('font-family', font);
+    }
+    if (size) {
+        element.css('font-size', size);
     }
     if (weight) {
         element.css('font-weight', weight);

@@ -28,6 +28,12 @@ $(document).ready(function () {
         element.css('letter-spacing', spacing);
     }
     if (font) {
+        WebFont.load({
+            google: {
+                families: [font]
+            }
+        });
+    }
         element.css('font-family', font);
     }
     if (size) {
@@ -39,12 +45,6 @@ $(document).ready(function () {
     if (shadow === 'false') {
         element.removeClass('shadow');
     }
-
-    WebFont.load({
-        google: {
-            families: [font]
-        }
-    });
 
     var hourElement = $('#hour');
     var minElement = $('#min');

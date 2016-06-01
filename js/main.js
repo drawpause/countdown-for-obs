@@ -29,11 +29,8 @@ $(document).ready(function () {
     }
     if (font) {
         WebFont.load({
-            google: {
-                families: [font]
-            }
+            google: { families: [font]}
         });
-    }
         element.css('font-family', font);
     }
     if (size) {

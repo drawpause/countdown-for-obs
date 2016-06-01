@@ -17,10 +17,22 @@ $(document).ready(function () {
 
     var startTime = getParameterByName('at');
     var duration = getParameterByName('duration');
-    var color = '#' + getParameterByName('color');
+    var color = getParameterByName('color');
+    var spacing = getParameterByName('spacing');
+    var font = getParameterByName('font');
     var then = moment().add(duration, 'minutes');
     var element = $('.countdown');
-    element.css('color', color);
+    
+    if (color) {
+        element.css('color', '#' + color);
+    }
+    if (spacing) {
+        element.css('letter-spacing', spacing);
+    }
+    if (font) {
+        element.css('font-family', font);
+    }
+    
 
     var interval = setInterval(function () {
         var now = moment();

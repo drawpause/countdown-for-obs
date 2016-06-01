@@ -46,10 +46,11 @@ $(document).ready(function () {
         timeleft = moment.duration(then.diff(now));
         var min = moment.utc(timeleft.asMilliseconds()).format('mm');
         var sec = moment.utc(timeleft.asMilliseconds()).format('ss');
-        if (then.isBefore(now)) {
+        if (min === '00' && sec === '00') {
             minElement.text('00');
             secElement.text('00');
             clearInterval(interval);
+            return false;
         }
         minElement.text(min);
         secElement.text(sec);

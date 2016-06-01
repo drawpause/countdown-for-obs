@@ -18,8 +18,13 @@ $(document).ready(function () {
     var size = getParameterByName('size');
     var weight = getParameterByName('weight');
     var shadow = getParameterByName('shadow');
-    var then = moment().add(juration.parse(duration), 'seconds');
+    var then;
+   
     var element = $('.countdown');
+   
+    if (duration) {
+        then = moment().add(juration.parse(duration), 'seconds');
+    }
     
     if (color) {
         element.css('color', '#' + color);

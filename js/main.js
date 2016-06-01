@@ -17,8 +17,10 @@ $(document).ready(function () {
 
     var startTime = getParameterByName('at');
     var duration = getParameterByName('duration');
+    var color = getParameterByName('color');
     var then = moment().add(duration, 'minutes');
     var element = $('.countdown');
+    element.css('color', color);
 
     var interval = setInterval(function () {
         var now = moment();

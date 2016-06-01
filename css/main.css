@@ -64,7 +64,7 @@ textarea {
     display: block;
     color: white;
     text-shadow: -5px -5px 3px #000, 5px -5px 3px #000, -5px 5px 3px #000, 5px 5px 3px #000;
-    font-size: 40px;
+    font-size: 14rem;
     font-weight: bold;
 }
 

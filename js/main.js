@@ -40,6 +40,12 @@ $(document).ready(function () {
         element.removeClass('shadow');
     }
 
+    WebFont.load({
+        google: {
+            families: [font]
+        }
+    });
+
     var hourElement = $('#hour');
     var minElement = $('#min');
     var secElement = $('#sec');

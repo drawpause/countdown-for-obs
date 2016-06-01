@@ -58,6 +58,8 @@ textarea {
 
 
 .countdown {
+    width: 100%;
+    text-align: center;
     height: 100px;
     display: block;
     color: white;

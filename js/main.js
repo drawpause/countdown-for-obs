@@ -1,3 +1,9 @@
+/**
+ * Get URL parameters
+ * @param name
+ * @param url
+ * @returns {*}
+ */
 function getParameterByName(name, url) {
     if (!url) url = window.location.href;
     name = name.replace(/[\[\]]/g, "\\$&");
@@ -8,91 +14,174 @@ function getParameterByName(name, url) {
     return decodeURIComponent(results[2].replace(/\+/g, " "));
 }
 
-var font = getParameterByName('font');
-var stopTime = getParameterByName('at');
-if (stopTime) stopTime = moment(stopTime, 'HH:mm');
-var duration = getParameterByName('duration') || '7min';
-var color = getParameterByName('color');
-var spacing = getParameterByName('spacing');
-var size = getParameterByName('size');
-var weight = getParameterByName('weight');
-var shadow = getParameterByName('shadow');
+/**
+ * Update time elements
+ * @param options
+ * @returns {boolean}
+ */
+function updateTime(options, interval)
+{
 
-var then = moment().add(juration.parse(duration), 'seconds');
+    // Time to count down to
+    var target = moment(options.stopTime, 'HH:mm');
 
-console.log(then);
+    // The present time
+    var now = moment();
 
-var fontAvailable = document.fonts.check('1em ' + font);
+    // Count the difference
+    var timeleft = moment.duration(target.diff(now));
 
-if (!fontAvailable) {
-    WebFontConfig = {
-        google: { families: [font]},
-        active: function() {
+    // Set time variables
+    var hours = moment.utc(timeleft.asMilliseconds()).format('HH');
+    var min = moment.utc(timeleft.asMilliseconds()).format('mm');
+    var sec = moment.utc(timeleft.asMilliseconds()).format('ss');
+
+    // When all variables are down to zero and the timer is effectively finished
+    // make sure everything is set to zero and clear the interval
+    if (hours === '00' && min === '00' && sec === '00') {
+        options.hour.text('00');
+        options.min.text('00');
+        options.sec.text('00');
+        if (interval) clearInterval(interval);
+
+        return false;
+    }
+    options.hour.text(hours);
+    options.min.text(min);
+    options.sec.text(sec);
+}
+
+/**
+ * Do stuff
+ */
+(function() {
+    // Get the time variables from URL
+    var at = getParameterByName('at');
+    var duration = getParameterByName('duration')
+
+    // Target time
+    var stopTime;
+
+    if (at) {
+        // If target time is set directly
+        stopTime = moment(at, 'HH:mm');
+    } else if (duration) {
+        // If the duration is set
+        stopTime = moment().add(juration.parse(duration), 'seconds');
+    } else {
+        // The default
+        stopTime = moment().add(10, 'minutes');
+    }
+
+    // Add one second to make the countdown start from ie. 10:00, not 9:59
+    stopTime.add(1, 'seconds');
+
+    // Get the style variables from URL
+    var font = getParameterByName('font') || 'Impact'; // Impact is the default font
+    var color = getParameterByName('color');
+    var spacing = getParameterByName('spacing');
+    var size = getParameterByName('size');
+    var weight = getParameterByName('weight');
+    var shadow = getParameterByName('shadow');
+
+    // Check if the requested font is available - if not, try to fetch it from Google Fonts
+    var fontAvailable = document.fonts.check('1em ' + font);
+    if (!fontAvailable) {
+        WebFontConfig = {
+            google: { families: [font]},
+            active: function() {
+                // Make sure all element widths are set after font rendering to prevent jumping
+                var width = $('#measure').width();
+                $('.number').css('width', width);
+            }
+        };
+
+        (function(d) {
+            var wf = d.createElement('script'), s = d.scripts[0];
+            wf.src = 'https://ajax.googleapis.com/ajax/libs/webfont/1.6.16/webfont.js';
+            s.parentNode.insertBefore(wf, s);
+        })(document);
+    }
+
+    /**
+     * When the document is ready
+     */
+    $(document).ready(function () {
+
+        // The parent element that contains the number elements
+        var element = $('.countdown');
+
+        /**
+         * If variables are set, change styles accordingly
+         */
+        if (color) {
+            element.css('color', '#' + color);
+        }
+        if (spacing) {
+            element.css('letter-spacing', spacing);
+        }
+        if (font) {
+            element.css('font-family', font);
+        }
+        if (size) {
+            element.css('font-size', size);
+        }
+        if (weight) {
+            element.css('font-weight', weight);
+        }
+        if (shadow === 'false') {
+            element.removeClass('shadow');
+        }
+
+
+        if (fontAvailable) {
+            // Looks like we're using web safe fonts, let's make sure the widths are static
+            // so the numbers won't jump
             var width = $('#measure').width();
             $('.number').css('width', width);
         }
-    };
 
-    (function(d) {
-        var wf = d.createElement('script'), s = d.scripts[0];
-        wf.src = 'https://ajax.googleapis.com/ajax/libs/webfont/1.6.16/webfont.js';
-        s.parentNode.insertBefore(wf, s);
-    })(document);
-}
+        /**
+         * Hour element
+         * @type {*|jQuery|HTMLElement}
+         */
+        var hourElement = $('#hour');
 
-$(document).ready(function () {
-   
-    var element = $('.countdown');
+        /**
+         * Minute Element
+         * @type {*|jQuery|HTMLElement}
+         */
+        var minElement = $('#min');
 
-    if (color) {
-        element.css('color', '#' + color);
-    }
-    if (spacing) {
-        element.css('letter-spacing', spacing);
-    }
-    if (font) {
-        element.css('font-family', font);
-    }
-    if (size) {
-        element.css('font-size', size);
-    }
-    if (weight) {
-        element.css('font-weight', weight);
-    }
-    if (shadow === 'false') {
-        element.removeClass('shadow');
-    }
+        /**
+         * Second element
+         * @type {*|jQuery|HTMLElement}
+         */
+        var secElement = $('#sec');
 
-    if (fontAvailable) {
-        var width = $('#measure').width();
-        $('.number').css('width', width);
-    }
+        /**
+         * Set the first time
+         */
+        updateTime({
+            'stopTime': stopTime,
+            'hour': hourElement,
+            'min': minElement,
+            'sec': secElement
+        });
 
-    var hourElement = $('#hour');
-    var minElement = $('#min');
-    var secElement = $('#sec');
+        // Everything is set, make the time visible
+        element.addClass('active');
 
-    var interval = setInterval(function () {
-        var now = moment();
-        var timeleft;
-
-        if (stopTime) {
-            then = moment(stopTime, 'HH:mm');
-        }
-        timeleft = moment.duration(then.diff(now));
-        var hours = moment.utc(timeleft.asMilliseconds()).format('HH');
-        var min = moment.utc(timeleft.asMilliseconds()).format('mm');
-        var sec = moment.utc(timeleft.asMilliseconds()).format('ss');
-        if (hours === '00' && min === '00' && sec === '00') {
-            hourElement.text('00');
-            minElement.text('00');
-            secElement.text('00');
-            clearInterval(interval);
-            return false;
-        }
-        hourElement.text(hours);
-        minElement.text(min);
-        secElement.text(sec);
-    }, 1000);
-
-});
+        /**
+         * Update the time every second
+         */
+        var interval = setInterval(function() {
+            updateTime({
+                'stopTime': stopTime,
+                'hour': hourElement,
+                'min': minElement,
+                'sec': secElement
+            }, interval)
+        }, 1000);
+    });
+})();

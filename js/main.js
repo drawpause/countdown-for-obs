@@ -24,6 +24,8 @@ $(document).ready(function () {
    
     if (duration) {
         then = moment().add(juration.parse(duration), 'seconds');
+    } else {
+        then = moment().add(5, 'minutes');
     }
     
     if (color) {

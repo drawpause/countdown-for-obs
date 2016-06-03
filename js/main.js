@@ -11,7 +11,7 @@ function getParameterByName(name, url) {
 $(document).ready(function () {
 
     var startTime = getParameterByName('at');
-    var duration = getParameterByName('duration');
+    var duration = getParameterByName('duration') || '7min';
     var color = getParameterByName('color');
     var spacing = getParameterByName('spacing');
     var font = getParameterByName('font');
